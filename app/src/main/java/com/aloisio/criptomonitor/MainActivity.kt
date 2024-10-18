@@ -11,19 +11,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.aloisio.criptomonitor.ui.theme.CriptoMonitorTheme
+import com.aloisio.criptomonitor.cripto.presentation.coin_list.CoinListScreen
+import com.aloisio.criptomonitor.cripto.presentation.coin_list.CoinListState
+import com.aloisio.criptomonitor.cripto.presentation.coin_list.components.previewCoin
+import com.aloisio.criptomonitor.ui.theme.CryptoMonitorTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            CriptoMonitorTheme {
+            CryptoMonitorTheme {
+                val coinsMock = CoinListState(
+                    coins = (1..100).map {
+                        previewCoin.copy(id = it.toString())
+                    }
+                )
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    CoinListScreen(state = coinsMock, modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -41,7 +47,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    CriptoMonitorTheme {
+    CryptoMonitorTheme {
         Greeting("Android")
     }
 }
