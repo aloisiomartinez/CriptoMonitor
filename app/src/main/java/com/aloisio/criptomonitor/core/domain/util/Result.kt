@@ -1,4 +1,4 @@
-package com.aloisio.criptomonitor.util
+package com.aloisio.criptomonitor.core.domain.util
 
 typealias DomainError = Error
 

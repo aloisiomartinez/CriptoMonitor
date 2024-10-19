@@ -1,9 +1,8 @@
 package com.aloisio.criptomonitor.cripto.presentation.models
 
-import android.icu.number.NumberFormatter
 import androidx.annotation.DrawableRes
 import com.aloisio.criptomonitor.cripto.domain.Coin
-import com.aloisio.criptomonitor.util.getDrawableIdForCoin
+import com.aloisio.criptomonitor.core.presentation.util.getDrawableIdForCoin
 import java.text.NumberFormat
 import java.util.Locale
 
