@@ -7,12 +7,15 @@ import com.aloisio.criptomonitor.core.domain.util.onError
 import com.aloisio.criptomonitor.core.domain.util.onSuccess
 import com.aloisio.criptomonitor.cripto.domain.CoinDataSource
 import com.aloisio.criptomonitor.cripto.presentation.coin_list.CoinListAction
+import com.aloisio.criptomonitor.cripto.presentation.coin_list.CoinListEvent
 import com.aloisio.criptomonitor.cripto.presentation.coin_list.CoinListState
 import com.aloisio.criptomonitor.cripto.presentation.models.toCoinUi
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -29,6 +32,9 @@ class CoinListViewModel(
             SharingStarted.WhileSubscribed(5000L),
             CoinListState()
         )
+
+    private val _events = Channel<CoinListEvent>()
+    val events = _events.receiveAsFlow()
 
 
     fun onAction(action: CoinListAction) {
@@ -56,6 +62,7 @@ class CoinListViewModel(
                 }
                 .onError { error ->
                     _state.update { it.copy(isLoading = false) }
+                    _events.send(CoinListEvent.Error(error))
                 }
         }
     }
