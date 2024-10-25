@@ -100,7 +100,7 @@ fun CoinListItemPreview() {
 
 
 internal val previewCoin = Coin(
-    id = "bitcoin",
+    id = "Bitcoin",
     rank = 1,
     name = "bitcoin",
     symbol = "BTC",

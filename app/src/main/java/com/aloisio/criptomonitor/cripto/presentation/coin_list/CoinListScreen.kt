@@ -25,6 +25,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.aloisio.criptomonitor.core.domain.util.toString
 import com.aloisio.criptomonitor.cripto.presentation.coin_list.components.CoinListItem
 import com.aloisio.criptomonitor.cripto.presentation.coin_list.components.previewCoin
+import com.aloisio.criptomonitor.cripto.presentation.models.CoinUi
 import com.aloisio.criptomonitor.ui.theme.CryptoMonitorTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -34,6 +35,7 @@ import kotlinx.coroutines.withContext
 @Composable
 fun CoinListScreen(
     state: CoinListState,
+    onAction: (CoinListAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
 
@@ -50,7 +52,7 @@ fun CoinListScreen(
             items(state.coins) { coinUi ->
                 CoinListItem(
                     coinUi = coinUi,
-                    onClick = { /*TODO*/ },
+                    onClick = { onAction(CoinListAction.OnCoinClick(coinUi)) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 HorizontalDivider()
@@ -70,7 +72,8 @@ private fun CoinListScreenPreview() {
                 }
             ), modifier = Modifier.background(
                 MaterialTheme.colorScheme.background
-            )
+            ),
+            onAction = {}
         )
     }
 }
