@@ -44,13 +44,12 @@ fun CoinDetailScreen(
     state: CoinListState,
     modifier: Modifier = Modifier
 ) {
-    val contentColor = if (isSystemInDarkTheme()) {
+    val contentColor = if(isSystemInDarkTheme()) {
         Color.White
     } else {
         Color.Black
     }
-
-    if (state.isLoading) {
+    if(state.isLoading) {
         Box(
             modifier = modifier
                 .fillMaxSize(),
@@ -58,7 +57,7 @@ fun CoinDetailScreen(
         ) {
             CircularProgressIndicator()
         }
-    } else if (state.selectedCoin != null) {
+    } else if(state.selectedCoin != null) {
         val coin = state.selectedCoin
         Column(
             modifier = modifier
@@ -68,7 +67,9 @@ fun CoinDetailScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
-                imageVector = ImageVector.vectorResource(id = coin.iconRes),
+                imageVector = ImageVector.vectorResource(
+                    id = coin.iconRes
+                ),
                 contentDescription = coin.name,
                 modifier = Modifier.size(100.dp),
                 tint = MaterialTheme.colorScheme.primary
@@ -94,28 +95,26 @@ fun CoinDetailScreen(
                 InfoCard(
                     title = stringResource(id = R.string.market_cap),
                     formattedText = "$ ${coin.marketCapUsd.formatted}",
-                    icon = ImageVector.vectorResource(
-                        id = R.drawable.stock
-                    )
+                    icon = ImageVector.vectorResource(R.drawable.stock)
                 )
                 InfoCard(
                     title = stringResource(id = R.string.price),
-                    formattedText = "$ ${coin.marketCapUsd.formatted}",
-                    icon = ImageVector.vectorResource(id = R.drawable.dollar)
+                    formattedText = "$ ${coin.priceUsd.formatted}",
+                    icon = ImageVector.vectorResource(R.drawable.dollar)
                 )
                 val absoluteChangeFormatted =
                     (coin.priceUsd.value * (coin.changePercent24Hr.value / 100))
                         .toDisplaylableNumber()
                 val isPositive = coin.changePercent24Hr.value > 0.0
-                val contentColor = if (isPositive) {
-                    if (isSystemInDarkTheme()) Color.Green else greenBackground
+                val contentColor = if(isPositive) {
+                    if(isSystemInDarkTheme()) Color.Green else greenBackground
                 } else {
                     MaterialTheme.colorScheme.error
                 }
                 InfoCard(
                     title = stringResource(id = R.string.change_last_24h),
                     formattedText = absoluteChangeFormatted.formatted,
-                    icon = if (isPositive) {
+                    icon = if(isPositive) {
                         ImageVector.vectorResource(id = R.drawable.trending)
                     } else {
                         ImageVector.vectorResource(id = R.drawable.trending_down)
