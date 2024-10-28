@@ -6,11 +6,17 @@ import com.aloisio.criptomonitor.core.domain.util.NetworkError
 import com.aloisio.criptomonitor.core.domain.util.Result
 import com.aloisio.criptomonitor.core.domain.util.map
 import com.aloisio.criptomonitor.cripto.data.mappers.toCoin
+import com.aloisio.criptomonitor.cripto.data.mappers.toCoinPrice
+import com.aloisio.criptomonitor.cripto.data.network.dto.CoinHistoryDto
 import com.aloisio.criptomonitor.cripto.data.network.dto.CoinsResponseDto
 import com.aloisio.criptomonitor.cripto.domain.Coin
 import com.aloisio.criptomonitor.cripto.domain.CoinDataSource
+import com.aloisio.criptomonitor.cripto.domain.CoinPrice
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import io.ktor.client.request.parameter
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 class RemoteCoinDataSource(
     private val httpClient: HttpClient
@@ -23,6 +29,27 @@ class RemoteCoinDataSource(
             )
         }.map { response ->
             response.data.map { it.toCoin() }
+        }
+    }
+
+    override suspend fun getCoinHistory(
+        coinId: String,
+        start: ZonedDateTime,
+        end: ZonedDateTime
+    ): Result<List<CoinPrice>, NetworkError> {
+        val startMillis = start.withZoneSameInstant(ZoneId.of("UTC")).toInstant().toEpochMilli()
+        val endMillis = end.withZoneSameInstant(ZoneId.of("UTC")).toInstant().toEpochMilli()
+
+        return safeCall<CoinHistoryDto> {
+            httpClient.get(
+                urlString = constructUrl("/assets/$coinId/history")
+            ) {
+                parameter("interval", "h6")
+                parameter("start", startMillis)
+                parameter("end", endMillis)
+            }
+        }.map { response ->
+            response.data.map { it.toCoinPrice() }
         }
     }
 }
